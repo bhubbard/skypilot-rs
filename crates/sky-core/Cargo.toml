@@ -1,0 +1,11 @@
+[package]
+name = "sky-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Pure-Rust SkyPilot multi-cloud compute broker, spot optimizer, and failover orchestrator"
+
+[dependencies]
+serde.workspace = true
+serde_yaml.workspace = true
+thiserror.workspace = true
