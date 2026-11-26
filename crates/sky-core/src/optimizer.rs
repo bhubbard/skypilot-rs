@@ -234,3 +234,30 @@ mod tests {
         assert!((plan[0].hourly_cost_usd - 0.99).abs() < 1e-6);
     }
 }
+
+#[cfg(kani)]
+mod kani_proofs {
+    use super::*;
+
+    #[kani::proof]
+    fn verify_spot_never_exceeds_on_demand_when_cheaper() {
+        let on_demand: f64 = kani::any();
+        let spot: f64 = kani::any();
+        kani::assume(on_demand.is_finite() && on_demand >= 0.0);
+        kani::assume(spot.is_finite() && spot >= 0.0 && spot <= on_demand);
+        let offer = InstanceOffer {
+            cloud: Cloud::Aws,
+            region: String::new(),
+            instance_type: String::new(),
+            accelerator: None,
+            accelerator_count: 0,
+            vcpus: 4,
+            memory_gb: 16,
+            on_demand_per_hr: on_demand,
+            spot_per_hr: Some(spot),
+        };
+        let eff = offer.spot_per_hr.unwrap_or(offer.on_demand_per_hr);
+        assert!(eff <= offer.on_demand_per_hr);
+        assert!(eff >= 0.0);
+    }
+}

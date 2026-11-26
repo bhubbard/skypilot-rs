@@ -9,3 +9,6 @@ description = "Pure-Rust SkyPilot multi-cloud compute broker, spot optimizer, an
 serde.workspace = true
 serde_yaml.workspace = true
 thiserror.workspace = true
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
